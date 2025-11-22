@@ -1,5 +1,5 @@
 // Simple login logic
-const API = localStorage.getItem('apiBase') || 'https://hr-backend.onrender.com';
+const API = localStorage.getItem('apiBase') || 'https://hr-app-tkdf.onrender.com';
 const emailEl = document.getElementById('email');
 const passEl = document.getElementById('password');
 const loginBtn = document.getElementById('loginBtn');
