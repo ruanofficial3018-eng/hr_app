@@ -2,7 +2,8 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
+
 
 const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/hr_app';
 
