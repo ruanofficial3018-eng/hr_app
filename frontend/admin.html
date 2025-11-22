@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>HR Admin</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link rel='stylesheet' href='styles.css'>
+  <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+</head>
+<body class="light">
+  <aside class="sidebar gradient">
+    <div class="logo">HR<span class="accent">Pro</span></div>
+    <nav>
+      <a href="#" class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+      <a href="#" data-page="employees"><i class="fas fa-users"></i> Employees</a>
+      <a href="#" data-page="attendance"><i class="fas fa-clock"></i> Attendance</a>
+      <a href="#" data-page="salary"><i class="fas fa-wallet"></i> Salary</a>
+    </nav>
+    <div class="sidebar-footer">
+      <button id="logoutBtn" class="ghost">Logout</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="search">Admin Dashboard</div>
+      <div class="actions">
+        <button id="darkToggle" class="ghost">🌙</button>
+      </div>
+    </header>
+
+    <section id="content" class="content">
+      <!-- Dashboard content injected -->
+      <div id="dashboardPage" class="page">
+        <div class="cards">
+          <div class="card stat">
+            <h3 id="totalEmployees">0</h3>
+            <p>Total Employees</p>
+          </div>
+          <div class="card stat">
+            <h3 id="currentMonthAttendance">0</h3>
+            <p>Current Month Attendance</p>
+          </div>
+          <div class="card stat">
+            <h3 id="salaryOverview">₹0</h3>
+            <p>Salary Overview</p>
+          </div>
+        </div>
+
+        <div class="charts">
+          <div class="card">
+            <canvas id="monthlyAttendanceChart"></canvas>
+          </div>
+          <div class="card">
+            <canvas id="dailyPunchesChart"></canvas>
+          </div>
+        </div>
+
+        <div class="card table-card">
+          <h3>Employees</h3>
+          <table id="employeesTable">
+            <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="employeesPage" class="page hidden">
+        <div class="card">
+          <h3>Create Employee</h3>
+          <input id="emp_name" placeholder="Name" />
+          <input id="emp_email" placeholder="Email" />
+          <input id="emp_password" placeholder="Password" />
+          <input id="emp_base" placeholder="Base Salary" type="number" />
+          <input id="emp_ot" placeholder="OT Rate" type="number" />
+          <button id="createEmp" class="primary">Create</button>
+        </div>
+      </div>
+
+      <div id="attendancePage" class="page hidden">
+        <div class="card">
+          <h3>Attendance</h3>
+          <button id="downloadCsv" class="ghost">Download CSV</button>
+        </div>
+      </div>
+
+      <div id="salaryPage" class="page hidden">
+        <div class="card">
+          <h3>Salary</h3>
+          <p>Use the API to calculate monthly salaries or view history</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

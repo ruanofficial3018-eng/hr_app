@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>HR App - Login</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body class="light">
+  <div class="center-card">
+    <div class="card login-card">
+      <h1 class="brand">HR<span class="accent">Pro</span></h1>
+      <p class="muted">Sign in to your account</p>
+      <input id="email" placeholder="Email" type="email" />
+      <input id="password" placeholder="Password" type="password" />
+      <div class="row">
+        <label><input type="checkbox" id="remember" /> Remember</label>
+        <button id="toggleTheme" class="ghost">🌙</button>
+      </div>
+      <button id="loginBtn" class="primary">Login</button>
+      <p class="muted small">Use /api/auth/register to create users (admin/employee)</p>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

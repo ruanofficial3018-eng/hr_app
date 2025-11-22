@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset='utf-8'>
+  <title>Employee Panel</title>
+  <meta name='viewport' content='width=device-width,initial-scale=1'>
+  <link rel='stylesheet' href='styles.css'>
+  <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
+  <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+</head>
+<body class="light">
+  <main class="main single">
+    <header class="topbar">
+      <div>Employee Panel</div>
+      <div><button id="logoutBtn" class="ghost">Logout</button></div>
+    </header>
+    <section class="content">
+      <div class="card center">
+        <h2 id="empName">Hello</h2>
+        <div class="row">
+          <button id="punchIn" class="primary">Punch In</button>
+          <button id="punchOut" class="secondary">Punch Out</button>
+        </div>
+        <div id="todayAtt" class="muted"></div>
+      </div>
+
+      <div class="card">
+        <h3>Monthly Attendance</h3>
+        <canvas id="monthlyChart"></canvas>
+      </div>
+
+      <div class="card">
+        <h3>Salary Overview</h3>
+        <div id="salaryBox" class="muted">Loading...</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="employee.js"></script>
+</body>
+</html>
