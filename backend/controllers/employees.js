@@ -1,5 +1,5 @@
 const User = require('../models/User');
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
 
 exports.list = async (req, res) => {
   const users = await User.find().select('-password');
