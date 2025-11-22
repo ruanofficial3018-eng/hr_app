@@ -2,7 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const adminCtrl = require('../controllers/admins');
-const { authMiddleware, role } = require('../middleware/auth');
+const { authMiddleware, role } = require('../middleware/authMiddleware');
 
 // All routes below require auth & admin
 router.get('/users', authMiddleware, role('admin'), adminCtrl.listUsers);

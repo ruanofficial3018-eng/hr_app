@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authMiddleware, role } = require('../middleware/auth');
+const { authMiddleware, role } = require('../middleware/authMiddleware');
 const SalaryController = require('../controllers/salary');
 
 router.post('/calculate/:userId', authMiddleware, role('admin'), SalaryController.calculateForUser);

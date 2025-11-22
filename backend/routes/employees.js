@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { authMiddleware, role } = require('../middleware/auth');
+const { authMiddleware, role } = require('../middleware/authMiddleware');
 const EmployeeController = require('../controllers/employees');
 
 router.get('/', authMiddleware, role('admin'), EmployeeController.list);
