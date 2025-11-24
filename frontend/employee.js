@@ -1,7 +1,7 @@
 // Employee panel: GPS punch
 const token = localStorage.getItem('token');
 if(!token) location.href = '/';
-const API = 'https://hr-app-tkdf.onrender.com/api';
+const API = "https://hr-app-tkdf.onrender.com/api";
 const user = JSON.parse(localStorage.getItem('user') || '{}');
 document.getElementById('empName').innerText = user.name || 'Employee';
 

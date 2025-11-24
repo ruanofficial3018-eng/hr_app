@@ -12,8 +12,8 @@ async function seed() {
     await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log('MongoDB connected for seeding');
 
-    const adminEmail = process.env.SEED_ADMIN_EMAIL || 'admin@local';
-    const adminPass = process.env.SEED_ADMIN_PASS || 'adminpass';
+    const adminEmail = process.env.SEED_ADMIN_EMAIL || 'ruanofficial3018@gmail.com';
+    const adminPass = process.env.SEED_ADMIN_PASS || 'RuAn@3018';
     const existing = await User.findOne({ email: adminEmail });
     if (existing) {
       console.log('Admin already exists:', adminEmail);

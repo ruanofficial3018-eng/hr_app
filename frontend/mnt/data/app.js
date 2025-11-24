@@ -1,14 +1,11 @@
-// Correct Backend URL
-const API_BASE = "https://hr-app-backend-lmsb.onrender.com";
+const API_BASE = "https://hr-app-backend-lmsb.onrender.com/api";
 
-// Elements
 const emailEl = document.getElementById('email');
 const passEl = document.getElementById('password');
 const loginBtn = document.getElementById('loginBtn');
 const toggle = document.getElementById('toggleTheme');
 
-// Theme handling
-function setTheme(theme) {
+function setTheme(theme){
   document.body.className = theme;
   localStorage.setItem('theme', theme);
 }
@@ -22,39 +19,28 @@ document.addEventListener('DOMContentLoaded', () => {
   setTheme(localStorage.getItem('theme') || 'light');
 });
 
-// Login
 loginBtn.addEventListener('click', async () => {
-  const email = emailEl.value.trim();
-  const password = passEl.value.trim();
+  const email = emailEl.value, password = passEl.value;
+  if(!email || !password) return alert('Enter login details');
 
-  if (!email || !password) return alert('Enter login details');
-
-  try {
-    const res = await fetch(`${API_BASE}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+  try{
+    const res = await fetch(API_BASE + '/auth/login', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ email, password })
     });
 
     const data = await res.json();
+    if(!res.ok) return alert(data.message || 'Login failed');
 
-    if (!res.ok) {
-      return alert(data.message || 'Invalid email or password');
-    }
-
-    // Save user & token
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
 
-    // Redirect based on role
-    if (data.user.role === 'admin') {
-      location.href = 'admin.html';
-    } else {
-      location.href = 'employee.html';
-    }
+    if(data.user.role === 'admin') location.href = 'admin.html';
+    else location.href = 'employee.html';
 
-  } catch (err) {
+  } catch(err){
     console.error(err);
-    alert('Network Error — Backend not reachable');
+    alert('Network Error – backend not reachable');
   }
 });
