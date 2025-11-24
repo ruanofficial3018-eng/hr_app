@@ -2,7 +2,7 @@
 const token = localStorage.getItem('token');
 if(!token) location.href = '/';
 const user = JSON.parse(localStorage.getItem('user') || '{}');
-const API = localStorage.getItem('apiBase') || 'http://localhost:5000/api';
+const API = 'https://hr-app-tkdf.onrender.com/api';
 
 document.querySelectorAll('.sidebar nav a').forEach(a=>{
   a.addEventListener('click', (e)=>{
