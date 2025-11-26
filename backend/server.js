@@ -18,6 +18,9 @@ app.use(cors({
   allowedHeaders: "Content-Type, Authorization"
 }));
 app.use(express.json());
+// inside backend/server.js (CommonJS)
+const usersRoutes = require('./routes/users');
+app.use('/api/users', usersRoutes);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);

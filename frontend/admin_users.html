@@ -1,0 +1,58 @@
+<!-- frontend/admin_users.html -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin — Users</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- FontAwesome (if you have it locally) -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body class="light">
+  <header class="header">
+    <h1>HR App — User Management</h1>
+    <div class="header-actions">
+      <button id="logoutBtn">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>Create Employee / User</h2>
+      <div class="form-grid">
+        <input id="u_name" placeholder="Full name" />
+        <input id="u_email" placeholder="Email" />
+        <input id="u_password" placeholder="Password" type="password" />
+        <input id="u_phone" placeholder="Phone" />
+        <input id="u_department" placeholder="Department" />
+        <input id="u_designation" placeholder="Designation" />
+        <input id="u_employeeId" placeholder="Employee ID" />
+        <select id="u_role">
+          <option value="employee">Employee</option>
+          <option value="hr">HR</option>
+          <option value="manager">Manager</option>
+          <option value="admin">Admin</option>
+        </select>
+        <input id="u_baseSalary" placeholder="Base Salary" type="number" />
+        <input id="u_otRate" placeholder="OT Rate" type="number" />
+      </div>
+      <div style="margin-top:10px;">
+        <button id="btnCreate">Create User</button>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:20px;">
+      <h2>All Users</h2>
+      <table id="usersTable" class="table">
+        <thead>
+          <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="admin_users.js"></script>
+</body>
+</html>
