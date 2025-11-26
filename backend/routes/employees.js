@@ -1,13 +1,51 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware, role } = require('../middleware/authMiddleware');
-const EmployeeController = require('../controllers/employees');
-const role = require("../middleware/roles");
+// backend/routes/employees.js
 
-router.get('/', authMiddleware, role('admin'), EmployeeController.list);
-router.get('/:id', authMiddleware, EmployeeController.get);
-router.post('/', authMiddleware, role('admin'), EmployeeController.create);
-router.put('/:id', authMiddleware, role('admin'), EmployeeController.update);
-router.delete('/:id', authMiddleware, role('admin'), EmployeeController.remove);
+const express = require("express");
+const router = express.Router();
+
+const authMiddleware = require("../middleware/authMiddleware"); // ✅ correct filename
+const role = require("../middleware/roles");                    // ✅ only one import
+
+const EmployeeController = require("../controllers/employees");
+
+// 🔹 Get all employees (Admin only)
+router.get(
+  "/",
+  authMiddleware,
+  role("admin"),
+  EmployeeController.list
+);
+
+// 🔹 Create new employee
+router.post(
+  "/",
+  authMiddleware,
+  role("admin"),
+  EmployeeController.create
+);
+
+// 🔹 Get single employee by ID
+router.get(
+  "/:id",
+  authMiddleware,
+  role("admin"),
+  EmployeeController.getOne
+);
+
+// 🔹 Update employee
+router.put(
+  "/:id",
+  authMiddleware,
+  role("admin"),
+  EmployeeController.update
+);
+
+// 🔹 Delete employee
+router.delete(
+  "/:id",
+  authMiddleware,
+  role("admin"),
+  EmployeeController.remove
+);
 
 module.exports = router;
