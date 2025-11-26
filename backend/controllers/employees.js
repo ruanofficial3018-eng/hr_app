@@ -1,37 +1,83 @@
-const User = require('../models/User');
-const bcrypt = require("bcryptjs");
+// backend/controllers/employees.js
 
+const User = require("../models/User");
+
+// 👉 Get all employees
 exports.list = async (req, res) => {
-  const users = await User.find().select('-password');
-  res.json(users);
-};
-
-exports.get = async (req, res) => {
-  const user = await User.findById(req.params.id).select('-password');
-  if(!user) return res.status(404).json({message:'Not found'});
-  res.json(user);
-};
-
-exports.create = async (req, res) => {
-  const {name,email,password,role,baseSalary,otRate} = req.body;
-  if(!name||!email||!password) return res.status(400).json({message:'Missing'});
-  const exists = await User.findOne({email});
-  if(exists) return res.status(400).json({message:'Email exists'});
-  const hash = await bcrypt.hash(password,10);
-  const user = await User.create({name,email,password:hash,role, baseSalary, otRate});
-  res.json({message:'Created', id:user._id});
-};
-
-exports.update = async (req, res) => {
-  const updates = {...req.body};
-  if(updates.password){
-    updates.password = await bcrypt.hash(updates.password,10);
+  try {
+    const employees = await User.find({ role: "employee" }).select("-password");
+    res.json(employees);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
   }
-  const user = await User.findByIdAndUpdate(req.params.id, updates, {new:true}).select('-password');
-  res.json({message:'Updated', user});
 };
 
+// 👉 Create employee
+exports.create = async (req, res) => {
+  try {
+    const { name, email, password, baseSalary, otRate } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const exists = await User.findOne({ email });
+    if (exists) return res.status(400).json({ message: "Email already used" });
+
+    const bcrypt = require("bcryptjs");
+    const hash = await bcrypt.hash(password, 10);
+
+    const employee = await User.create({
+      name,
+      email,
+      password: hash,
+      role: "employee",
+      baseSalary: baseSalary || 0,
+      otRate: otRate || 0
+    });
+
+    res.status(201).json({ message: "Employee created", employee });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// 👉 Get single employee
+exports.getOne = async (req, res) => {
+  try {
+    const emp = await User.findById(req.params.id).select("-password");
+    if (!emp) return res.status(404).json({ message: "Employee not found" });
+
+    res.json(emp);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// 👉 Update employee
+exports.update = async (req, res) => {
+  try {
+    const emp = await User.findByIdAndUpdate(req.params.id, req.body, {
+      new: true
+    }).select("-password");
+
+    if (!emp) return res.status(404).json({ message: "Employee not found" });
+
+    res.json({ message: "Employee updated", emp });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
+};
+
+// 👉 Delete employee
 exports.remove = async (req, res) => {
-  await User.findByIdAndDelete(req.params.id);
-  res.json({message:'Deleted'});
+  try {
+    const emp = await User.findByIdAndDelete(req.params.id);
+
+    if (!emp) return res.status(404).json({ message: "Employee not found" });
+
+    res.json({ message: "Employee removed" });
+  } catch (err) {
+    res.status(500).json({ message: "Server Error", error: err.message });
+  }
 };
