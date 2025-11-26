@@ -1,63 +1,87 @@
-const Attendance = require('../models/Attendance');
-const User = require('../models/User');
-const { haversineDistance } = require('../utils/haversine');
-require('dotenv').config();
-const createCsvWriter = require('csv-writer').createObjectCsvStringifier;
+// backend/controllers/attendance.js
 
-exports.punch = async (req, res) => {
-  try{
-    const { type, lat, lon } = req.body;
-    if(!type || (type!=='in' && type!=='out')) return res.status(400).json({message:'Invalid type'});
-    if(typeof lat !== 'number' || typeof lon !== 'number') return res.status(400).json({message:'Coordinates required'});
-    const officeLat = parseFloat(process.env.OFFICE_LAT);
-    const officeLon = parseFloat(process.env.OFFICE_LON);
-    const dist = haversineDistance(lat, lon, officeLat, officeLon);
-    const allowed = dist <= (parseFloat(process.env.OFFICE_RADIUS_METERS||100));
-    if(!allowed) return res.status(403).json({message:'Outside allowed radius', distance: dist});
-    const att = await Attendance.create({user:req.user.id, type, lat, lon});
-    res.json({message:'Punched', att});
-  } catch(err){
-    console.error(err);
-    res.status(500).json({message:'Server error'});
+const Attendance = require("../models/Attendance");
+
+// 👉 Punch In
+exports.punchIn = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const already = await Attendance.findOne({
+      userId,
+      date: new Date().toDateString()
+    });
+
+    if (already && already.punchIn)
+      return res.status(400).json({ message: "Already punched in today" });
+
+    const record = await Attendance.create({
+      userId,
+      date: new Date().toDateString(),
+      punchIn: new Date(),
+    });
+
+    res.json({ message: "Punch In successful", record });
+  } catch (err) {
+    res.status(500).json({ message: "Error", error: err.message });
   }
 };
 
-exports.myToday = async (req, res) => {
-  const start = new Date();
-  start.setHours(0,0,0,0);
-  const end = new Date();
-  end.setHours(23,59,59,999);
-  const items = await Attendance.find({user:req.user.id, timestamp: {$gte:start, $lte:end}}).sort('timestamp');
-  res.json(items);
+// 👉 Punch Out
+exports.punchOut = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const record = await Attendance.findOne({
+      userId,
+      date: new Date().toDateString(),
+    });
+
+    if (!record) return res.status(404).json({ message: "Punch-in not found" });
+    if (record.punchOut)
+      return res.status(400).json({ message: "Already punched out" });
+
+    record.punchOut = new Date();
+    await record.save();
+
+    res.json({ message: "Punch Out successful", record });
+  } catch (err) {
+    res.status(500).json({ message: "Error", error: err.message });
+  }
 };
 
-exports.forUser = async (req, res) => {
-  const items = await Attendance.find({user:req.params.id}).sort('-timestamp').limit(500);
-  res.json(items);
+// 👉 Get Today Attendance
+exports.today = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const record = await Attendance.findOne({
+      userId,
+      date: new Date().toDateString(),
+    });
+
+    res.json(record || {});
+  } catch (err) {
+    res.status(500).json({ message: "Error", error: err.message });
+  }
 };
 
-exports.exportCsv = async (req, res) => {
-  const items = await Attendance.find().populate('user','name email').sort('-timestamp').limit(10000);
-  const csvWriter = createCsvWriter({
-    header: [
-      {id:'name', title:'Name'},
-      {id:'email', title:'Email'},
-      {id:'type', title:'Type'},
-      {id:'timestamp', title:'Timestamp'},
-      {id:'lat', title:'Lat'},
-      {id:'lon', title:'Lon'}
-    ]
-  });
-  const records = items.map(i => ({
-    name: i.user?.name || '',
-    email: i.user?.email || '',
-    type: i.type,
-    timestamp: i.timestamp.toISOString(),
-    lat: i.lat,
-    lon: i.lon
-  }));
-  const csv = csvWriter.getHeaderString() + csvWriter.stringifyRecords(records);
-  res.setHeader('Content-disposition','attachment; filename=attendance.csv');
-  res.set('Content-Type','text/csv');
-  res.send(csv);
+// 👉 Get Monthly Attendance
+exports.month = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const month = req.query.month; // "2025-02"
+
+    const start = new Date(`${month}-01`);
+    const end = new Date(`${month}-31`);
+
+    const records = await Attendance.find({
+      userId,
+      punchIn: { $gte: start, $lte: end }
+    });
+
+    res.json(records);
+  } catch (err) {
+    res.status(500).json({ message: "Error", error: err.message });
+  }
 };

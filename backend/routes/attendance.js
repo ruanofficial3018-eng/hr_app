@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware, role } = require('../middleware/authMiddleware');
-const AttendanceController = require('../controllers/attendance');
+const router = require("express").Router();
+const auth = require("../middleware/authMiddleware");
+const Attendance = require("../controllers/attendance");
 
-router.post('/punch', authMiddleware, AttendanceController.punch);
-router.get('/me/today', authMiddleware, AttendanceController.myToday);
-router.get('/user/:id', authMiddleware, role('admin'), AttendanceController.forUser);
-router.get('/report/csv', authMiddleware, role('admin'), AttendanceController.exportCsv);
+router.post("/punch-in", auth, Attendance.punchIn);
+router.post("/punch-out", auth, Attendance.punchOut);
+router.get("/today", auth, Attendance.today);
+router.get("/month", auth, Attendance.month);
 
 module.exports = router;
