@@ -1,16 +1,20 @@
 // backend/middleware/roles.js
-module.exports.requireRole = function(role) {
-  return function(req, res, next) {
-    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
-    if (req.user.role !== role) return res.status(403).json({ message: 'Forbidden' });
-    next();
-  };
-};
 
-module.exports.requireAny = function(roles = []) {
-  return function(req, res, next) {
-    if (!req.user) return res.status(401).json({ message: 'Not authenticated' });
-    if (!roles.includes(req.user.role)) return res.status(403).json({ message: 'Forbidden' });
-    next();
+module.exports = function role(requiredRole) {
+  return function (req, res, next) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      if (req.user.role !== requiredRole) {
+        return res.status(403).json({ message: "Forbidden — insufficient role" });
+      }
+
+      next();
+    } catch (err) {
+      console.error(err);
+      return res.status(500).json({ message: "Server error" });
+    }
   };
 };

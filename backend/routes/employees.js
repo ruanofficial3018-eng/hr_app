@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { authMiddleware, role } = require('../middleware/authMiddleware');
 const EmployeeController = require('../controllers/employees');
+const role = require("../middleware/roles");
 
 router.get('/', authMiddleware, role('admin'), EmployeeController.list);
 router.get('/:id', authMiddleware, EmployeeController.get);
